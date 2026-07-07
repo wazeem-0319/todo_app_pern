@@ -1,0 +1,20 @@
+# Ignore node_modules and dist in any ui/ or server/ folder, at any depth
+# **/ui/**/node_modules/
+# **/ui/**/dist/
+# **/server/**/node_modules/
+# **/server/**/dist/
+
+# Also catch node_modules/dist directly inside ui/ or server/ (not nested further)
+# ui/node_modules/
+# ui/dist/
+# server/node_modules/
+# server/dist/
+
+**/node_modules/
+**/dist/
+
+
+
+
+
+
