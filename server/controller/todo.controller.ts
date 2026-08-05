@@ -54,6 +54,28 @@ res.status(201).json({
 })
 
 
+export const updateToDo=asyncHandler(async(req,res)=>{
+    const {_id}=req.params
+    const {description,is_completed}=req.body
+
+    if (typeof _id !== "string" || !_id || _id.trim()==="" || isNaN(Number(_id))){
+        throw new validationError("Invalid ID number")
+    }
+
+    const id=Number(_id)
+
+    if(description===undefined && is_completed===undefined){
+        throw new validationError("At least one field must be define (Description or is_completed")
+    }
+
+    if(description!==undefined && description.trim()===""){
+        throw new validationError("validation cann't be empty")
+    }
+
+    let up
+
+})
+
 
 
 
