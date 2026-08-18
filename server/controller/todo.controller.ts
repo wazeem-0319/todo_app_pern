@@ -72,9 +72,90 @@ export const updateToDo=asyncHandler(async(req,res)=>{
         throw new validationError("validation cann't be empty")
     }
 
-    let up
+    let updateData;
+
+
+    try {
+        updateData=await pool.query("UPDATE todo SET description=COALESCE($1,description),is_completed=COALESCE($2,is_completed) WHERE _id=$3 RETURNING *",[description,is_completed,id])
+    } catch (error) {
+        throw new appError("Server Error",500)
+    }
+
+    if(updateData.rowCount===0){
+        throw new appError("Todo not Found",404)
+    }
+
+    return res.status(200).json({
+        "success":true,
+        "data":updateData.rows[0]
+    })
 
 })
+
+
+
+export const deleteTodo=asyncHandler(async(req,res)=>{
+    const {_id}=req.params
+
+
+    if(!_id || isNaN(Number(_id))){
+        throw new validationError("the ID should be a Number")
+    }
+
+    let deleteData;
+    const id=Number(_id)
+    try {
+        deleteData=await pool.query("DELETE FROM todo WHERE _id=$1 RETURNING *",[id])
+    } catch (error) {
+        throw new appError("Server Error",500)
+    }
+
+    if(deleteData.rowCount===0){
+        throw new appError("Todo not Found",404)
+    }
+
+    return res.status(200).json({
+        "success":true,
+        "data":deleteData.rows[0]
+    })
+
+}) 
+
+
+export const getData=asyncHandler(async(req,res)=>{
+
+const {_id}=req.params
+
+if(!_id || isNaN(Number(_id))){
+    throw new validationError("The ID should be a Number")
+}
+
+const id=Number(_id)
+let data;
+
+try {
+    data=await pool.query("SELECT * FROM todo WHERE _id=$1",[id])
+} catch (error) {
+    throw new appError("Server Error",500)
+}
+if(data.rowCount===0){
+    throw new appError("Todo not Found",404)
+}
+
+return res.status(200).json({
+    "success":true,
+    "data":data.rows[0]
+})
+
+
+})
+
+
+
+
+
+
+
 
 
 
